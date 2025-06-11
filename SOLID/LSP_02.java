@@ -2,20 +2,17 @@ package SOLID;
 
 public class LSP_02 {
     
-    /*
-     * TASK:
-     * The polymorphic function move expect the same behaviour
-     * for all birds, but this isn't the case.
-     * Fix this to obey the LSP (Liskov Substitution Principle)!
-     */
-
-    public static class Bird {
-        public void fly() {
-            System.out.println("The bird is flying...");
+   public static class Bird {
+        public void move() {
+            System.out.println("The bird is moving...");
         }
     }
 
-    public static class Sparrow extends Bird {
+    public interface Flyable {
+        void fly();
+    }
+
+    public static class Sparrow extends Bird implements Flyable {
         @Override
         public void fly() {
             System.out.println("The sparrow is flying...");
@@ -23,14 +20,19 @@ public class LSP_02 {
     }
 
     public static class Penguin extends Bird {
+      
         @Override
-        public void fly() {
-            throw new UnsupportedOperationException("Penguins can't fly :(");
+        public void move() {
+            System.out.println("The penguin is waddling...");
         }
     }
 
+   
     public static void move(Bird bird) {
-        bird.fly();
+        bird.move();
+        if (bird instanceof Flyable) {
+            ((Flyable) bird).fly();
+        }
     }
 
     public static void main(String[] args) {

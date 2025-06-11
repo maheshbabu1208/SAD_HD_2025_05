@@ -2,30 +2,49 @@ package SOLID;
 
 public class OCP_01 {
 
-    /*
-     * TASK:
-     * How to add a new discount type (customerType) without
-     * violating OCP (Open/Closed Principle)?
-     */
-    
+   public interface DiscountStrategy {
+        double calculate(double amount);
+    }
+
+
+    public static class RegularDiscount implements DiscountStrategy {
+        public double calculate(double amount) {
+            return amount * 0.1;
+        }
+    }
+
+    public static class PremiumDiscount implements DiscountStrategy {
+        public double calculate(double amount) {
+            return amount * 0.2;
+        }
+    }
+
+    public static class GoldDiscount implements DiscountStrategy {
+        public double calculate(double amount) {
+            return amount * 0.3;
+        }
+    }
+
+   
     public static class DiscountCalculator {
-        public double calculateDiscount(String customerType, double amount) {
-            if (customerType.equals("Regular")) {
-                return amount * 0.1;
-            }
-            else if (customerType.equals("Premium")) {
-                return amount * 0.2;
-            }
-            return 0.0;
+        private DiscountStrategy strategy;
+
+        public DiscountCalculator(DiscountStrategy strategy) {
+            this.strategy = strategy;
+        }
+
+        public double calculateDiscount(double amount) {
+            return strategy.calculate(amount);
         }
     }
 
     public static void main(String[] args) {
-        DiscountCalculator calculator = new DiscountCalculator();
-        double regularDiscount = calculator.calculateDiscount("Regular", 100.0);
-        double premiumDiscount = calculator.calculateDiscount("Premium", 100.0);
+        DiscountCalculator regularCalc = new DiscountCalculator(new RegularDiscount());
+        DiscountCalculator premiumCalc = new DiscountCalculator(new PremiumDiscount());
+        DiscountCalculator goldCalc = new DiscountCalculator(new GoldDiscount()); 
 
-        System.out.println("Regular Discount: " + regularDiscount);
-        System.out.println("Premium Discount: " + premiumDiscount);
+        System.out.println("Regular Discount: " + regularCalc.calculateDiscount(100.0));
+        System.out.println("Premium Discount: " + premiumCalc.calculateDiscount(100.0));
+        System.out.println("Gold Discount: " + goldCalc.calculateDiscount(100.0)); 
     }
 }
